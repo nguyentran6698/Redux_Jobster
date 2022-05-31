@@ -3,14 +3,15 @@ import { toast } from "react-toastify";
 import customFetch from "../../utils/axios";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
 import { createJobThunk, updateJobThunk } from "./jobThunk";
+import { getAllJobs, showLoading, hideLoading } from "../allJobs/allJobsSlice";
 const initialState = {
   isLoading: false,
   position: "",
   company: "",
   jobLocation: "",
-  jobTypeOptions: ["Full-Time", "Part-Time", "Remote", "Internship"],
+  jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
   jobType: "full-time",
-  statusOptions: ["Interview", "Declined", "Pending"],
+  statusOptions: ["interview", "declined", "pending"],
   status: "pending",
   isEditing: false,
   editJobId: "",
