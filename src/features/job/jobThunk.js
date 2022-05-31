@@ -4,9 +4,7 @@ import { clearValue } from "./jobSlice";
 
 export const createJobThunk = async (url, job, thunkAPI) => {
   try {
-    const userToken = console.log(userToken);
-
-    const response = await customFetch(url, job, {
+    const response = await customFetch.post(url, job, {
       headers: {
         authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
       },

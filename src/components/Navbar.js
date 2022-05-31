@@ -33,7 +33,7 @@ const Navbar = () => {
               type="button"
               onClick={() => {
                 console.log("logout user");
-                dispatch(logoutUser());
+                dispatch(logoutUser("Logging out...."));
               }}
             >
               Logout
