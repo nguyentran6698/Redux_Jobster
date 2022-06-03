@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import customFetch from "../../utils/axios";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
-import { createJobThunk, updateJobThunk } from "./jobThunk";
-import { getAllJobs, showLoading, hideLoading } from "../allJobs/allJobsSlice";
+import { createJobThunk, updateJobThunk, deleteJobThunk } from "./jobThunk";
 const initialState = {
   isLoading: false,
   position: "",
@@ -16,6 +14,7 @@ const initialState = {
   isEditing: false,
   editJobId: "",
 };
+
 export const createJob = createAsyncThunk(
   "/job/createJob",
   async (job, thunkAPI) => {
@@ -24,8 +23,14 @@ export const createJob = createAsyncThunk(
 );
 export const updateJob = createAsyncThunk(
   "/job/updateJob",
-  async (job, thunkAPI) => {
-    return updateJobThunk("/job", job, thunkAPI);
+  async ({ job, jobId }, thunkAPI) => {
+    return updateJobThunk("/jobs/", { job, jobId }, thunkAPI);
+  }
+);
+export const deleteJob = createAsyncThunk(
+  "/job/deleteJob",
+  async (jobId, thunkAPI) => {
+    return deleteJobThunk("/jobs/", jobId, thunkAPI);
   }
 );
 const jobSlice = createSlice({
@@ -41,6 +46,9 @@ const jobSlice = createSlice({
         jobLocation: getUserFromLocalStorage()?.location || "",
       };
     },
+    setEditJob: (state, { payload }) => {
+      return { ...state, isEditing: true, ...payload };
+    },
   },
   extraReducers: {
     [createJob.pending]: (state) => {
@@ -54,7 +62,18 @@ const jobSlice = createSlice({
       state.isLoading = false;
       toast.error(payload);
     },
+    [updateJob.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [updateJob.fulfilled]: (state) => {
+      state.isLoading = false;
+      toast.success("Job Modified...");
+    },
+    [updateJob.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload);
+    },
   },
 });
-export const { handleChange, clearValue } = jobSlice.actions;
+export const { handleChange, clearValue, setEditJob } = jobSlice.actions;
 export default jobSlice.reducer;
